@@ -562,3 +562,32 @@ input[type="search"]{
     display: inline-block;
     text-align: center;
 }
+.fixtures-container {
+    float: left;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.fixture-card {
+    width: 100%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.team-fixtures-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.team-container {
+    margin-bottom: 20px;
+}
+
+.fixtures-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+

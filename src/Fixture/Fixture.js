@@ -22,30 +22,18 @@ function Fixture() {
         <div>
             <h2>Team Fixtures</h2>
             {fixtures ? (
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Home Team</th>
-                        <th>Score Home</th>
-                        <th>Score Away</th>
-                        <th>Away Team</th>
-                        <th>Minute</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {fixtures.map((fixture) => (
-                        <tr key={fixture.fixture.id}>
-                            <td>{new Date(fixture.fixture.timestamp * 1000).toLocaleDateString()}</td>
-                            <td>{fixture.teams.home.name}</td>
-                            <td>{fixture.goals.home}</td>
-                            <td>{fixture.goals.away}</td>
-                            <td>{fixture.teams.away.name}</td>
-                            <td>{fixture.fixture.status.elapsed}</td>
-                        </tr>
-                    ))}
-                    </tbody>
-                </table>
+                <div className="fixture-container">
+                    <div className="card fixture-card">
+
+                        {fixtures.map((fixture, index) => (
+                            <div className="card-body">
+                                <h5 className="card-title">{fixture.teams.home.name} vs {fixture.teams.away.name}</h5>
+                                <p className="card-text">{new Date(fixture.fixture.timestamp * 1000).toLocaleDateString()}</p>
+                            </div>
+                        ))}
+
+                    </div>
+                </div>
             ) : (
                 <p>Loading fixtures...</p>
             )}
