@@ -6,9 +6,9 @@ const AuthWrapper = ({ children }) => {
 
     const isAuthenticated = () => {
         const token = localStorage.getItem('accessToken');
-        const decodedToken = jwtDecode(token);
-        const expirationDate = new Date(decodedToken.exp * 1000)
-        return token !== null || expirationDate < new Date();
+        const { exp: expirationTime } = jwtDecode(token);
+        const expirationDate = new Date(expirationTime * 1000)
+        return token !== null && expirationDate > new Date();
     };
 
     return isAuthenticated() ? children : <Navigate to="/login" state={{ from: location }} />;

@@ -1,0 +1,25 @@
+.searchResultItem {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #f1f1f1;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    width: 500px;
+}
+
+.playerInfo {
+    display: flex;
+    width: 500px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+.addButton {
+    margin-left: 10px;
+}

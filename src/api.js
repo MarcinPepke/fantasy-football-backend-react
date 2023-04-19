@@ -4,9 +4,10 @@ import axios from 'axios';
 const API_BASE_URL = 'http://localhost:8080';
 
 const apiClient = axios.create({
-    baseURL: API_BASE_URL,
-    timeout: 5000,
+    baseURL: API_BASE_URL
 });
+
+
 
 export const login = async (username, password) => {
     try {
@@ -42,7 +43,7 @@ export const createTeam = async(name) => {
     return response.data;
 };
 export const searchEngine = async(name,position,price, page) => {
-    const response = await apiClient.get('/api/player/all?name=' + name + '&position=' + position + '&price=' + price + '&page=' + page + '&size=10', {
+    const response = await apiClient.get('/api/player/all?name=' + name + '&position=' + position + '&price=' + price + '&page=' + page + '&size=5', {
         headers: {
             'Authorization': `Bearer ` + localStorage.getItem("accessToken")
         }
@@ -54,6 +55,15 @@ export const searchEngine = async(name,position,price, page) => {
 };
 export const getBudget = async() => {
     const response = await apiClient.get('/api/fantasy/team/budget', {
+        headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem("accessToken")
+        }
+    });
+    return response.data;
+};
+
+export const getFixture = async() => {
+    const response = await apiClient.get('/api/fantasy/gameweek', {
         headers: {
             'Authorization': 'Bearer ' + localStorage.getItem("accessToken")
         }

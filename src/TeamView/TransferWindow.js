@@ -6,8 +6,11 @@ import {getAllPlayers, addPlayer, removePlayer, getAllPremierLeaguePlayers} from
 import Search from "./serach/Search";
 import CreateTeam from "../component/CreateTeam";
 import LoginPage from "../Login/LoginPage";
-import {createTeam, fetchUserTeam, getBudget, login} from "../api";
+import {createTeam, fetchUserTeam, getBudget, getFixture, login} from "../api";
 import Player from "./Player";
+import player from "./Player";
+import Match from "../component/Match";
+import Fixture from "../Fixture/Fixture";
 
 function Navbar() {
     return null;
@@ -39,6 +42,7 @@ const TransferWindow = ({userTeam, onAddPlayer, onRemovePlayer}) => {
                 setHasTeam(true);
                 setTeam(teamData);
 
+
                 const lineupData = {
                     Goalkeeper: Array.isArray(teamData) ? teamData.filter(player => player.position === 'Goalkeeper') : [],
                     Defender: Array.isArray(teamData) ? teamData.filter(player => player.position === 'Defender') : [],
@@ -63,30 +67,32 @@ const TransferWindow = ({userTeam, onAddPlayer, onRemovePlayer}) => {
 
 
     function getMaximumPlayersForPosition(position) {
-        switch (position) {
-            case 'Goalkeeper':
+        const positionKey = getPositionKey(position);
+        switch (positionKey) {
+            case "Goalkeeper":
                 return 2;
-            case 'Defender':
+            case "Defender":
                 return 5;
-            case 'Midfielder':
+            case "Midfielder":
                 return 5;
-            case 'Attacker':
+            case "Attacker":
                 return 3;
             default:
                 return 0;
         }
+
     }
 
-    const addToLineup = useCallback((player, event) => {
+    function addToLineup(player, event) {
         event.preventDefault();
+
         if (budget - player.price < 0) {
             alert("Not enough budget");
             return;
         }
 
-
-        if (lineup["Defender"].length >= getMaximumPlayersForPosition(player.position)) {
-            console.log(lineup[player.position].length)
+        const positionKey = getPositionKey(player.position);
+        if (lineup[positionKey].length >= getMaximumPlayersForPosition(player.position)) {
             alert("Maximum players for this position reached");
             return;
         }
@@ -96,22 +102,30 @@ const TransferWindow = ({userTeam, onAddPlayer, onRemovePlayer}) => {
             [player.position]: [...prevLineup[player.position], player],
         }));
 
-        console.log(lineup)
+        setBudget((prevBudget) => prevBudget - player.price);
+    }
 
-        setBudget(budget - player.price);
-    }, [lineup, setLineup]);
 
-    function removeFromLineup(player) {
-        setLineup({
-            ...lineup,
-            [player.position]: lineup[player.position].filter(p => p.id !== player.id),
-        });
 
-        setBudget(budget + player.price);
+
+    function getPositionKey(position) {
+        const positionMap = {
+            Goalkeeper: "Goalkeeper",
+            Defender: "Defender",
+            Midfielder: "Midfielder",
+            Attacker: "Attacker",
+        };
+
+        return positionMap[position] || "";
     }
 
     return (
+
         <div className="sQB1U">
+            <div className="ddsf">
+
+            </div>
+
             <Navbar/>
             {!hasTeam && isToken ? (
                 <CreateTeam onCreateTeam={handleCreateTeam}/>
@@ -138,69 +152,35 @@ const TransferWindow = ({userTeam, onAddPlayer, onRemovePlayer}) => {
                                                 <div className="dEnEMP">
                                                     <div className="iAuEaL-gPAVqU">
                                                         {lineup.Goalkeeper.map((player => (
-                                                            <div className="gAzdNx">
-                                                                {player.name}
+                                                            <div key={player.id} className="gAzdNx">
+                                                                <Player key={player.id} photo={player.photo} price={player.price} name={player.name} />
                                                             </div>
                                                         )))}
 
-                                                       {/* <div className="gAzdNx">
-
-                                                        </div>
-                                                        <div className="gAzdNx">
-
-                                                        </div>
-                                                        <div className="gAzdNx"></div>*/}
                                                     </div>
                                                     <div className="iAuEaL-gPAVqU">
                                                         {lineup.Defender.map((player => (
-                                                            <div className="gAzdNx">
-                                                                <Player photo={player.photo} price={player.price} name={player.name} />
+                                                            <div key={player.id} className="gAzdNx">
+                                                                <Player key={player.id} photo={player.photo} price={player.price} name={player.name} />
                                                             </div>
                                                         )))}
-                                                       {/* <div className="gAzdNx">
 
-                                                        </div>
-                                                        <div className="gAzdNx">
-
-                                                        </div>
-                                                        <div className="gAzdNx">
-
-                                                        </div>
-                                                        <div className="gAzdNx">
-
-                                                        </div>*/}
                                                     </div>
                                                     <div className="iAuEaL-gPAVqU">
                                                         {lineup.Midfielder.map((player => (
-                                                            <div className="gAzdNx">
-                                                                {player.name}
+                                                            <div   key={player.id} className="gAzdNx">
+                                                                <Player key={player.id} photo={player.photo} price={player.price} name={player.name} />
                                                             </div>
                                                         )))}
-                                                        {/*<div className="gAzdNx">*/}
 
-                                                        {/*</div>*/}
-                                                        {/*<div className="gAzdNx">*/}
-
-                                                        {/*</div>*/}
-                                                        {/*<div className="gAzdNx">*/}
-
-                                                        {/*</div>*/}
-                                                        {/*<div className="gAzdNx">*/}
-
-                                                        {/*</div>*/}
                                                     </div>
                                                     <div className="iAuEaL-gPAVqU">
                                                         {lineup.Attacker.map((player => (
-                                                            <div className="gAzdNx">
-                                                               <Player photo={player.photo} price={player.price} name={player.name} />
+                                                            <div key={player.id} className="gAzdNx">
+                                                               <Player key={player.id} photo={player.photo} price={player.price} name={player.name} />
                                                             </div>
                                                         )))}
-                                                        {/*<div className="gAzdNx">*/}
 
-                                                        {/*</div>*/}
-                                                        {/*<div className="gAzdNx">*/}
-
-                                                        {/*</div>*/}
                                                     </div>
                                                 </div>
                                             </div>
@@ -218,7 +198,9 @@ const TransferWindow = ({userTeam, onAddPlayer, onRemovePlayer}) => {
                     </div>
                 </div>
             )}
-
+            <div className="fixtures-display">
+                <Fixture />
+            </div>
         </div>
     );
 };

@@ -1,7 +1,11 @@
 import React from "react";
-import { useState, useEffect} from "react";
+import {useState, useEffect} from "react";
 import ReactPaginate from "react-paginate";
 import {searchEngine} from "../../api";
+import Pagination from '@mui/material/Pagination';
+
+import styles from '/_________jd/demo/demo/fantasy-football/src/Fixture/SeachCss.css'
+
 
 function SearchForm({addToLineup, budget, setBudget, lineup, setLineup}) {
     const [name, setName] = useState('');
@@ -11,8 +15,9 @@ function SearchForm({addToLineup, budget, setBudget, lineup, setLineup}) {
     const [totalPages, setTotalPages] = useState(1);
     const [currentPage, setCurrentPage] = useState(0);
 
-
-
+    const searchEngineProps = {
+        addToLineup: addToLineup,
+    };
 
 
     function handleNameChange(event) {
@@ -27,13 +32,13 @@ function SearchForm({addToLineup, budget, setBudget, lineup, setLineup}) {
         setPrice(event.target.value);
     }
 
-    function handlePageClick({ selected }) {
+    function handlePageClick({selected}) {
         setCurrentPage(selected);
         fetchSearchResults(selected);
     }
 
-    const handleAddToLineup = (player,event) => {
-        addToLineup(player,event);
+    const handleAddToLineup = (player, event) => {
+        addToLineup(player, event);
     };
 
     function fetchSearchResults(pageNumber = 0) {
@@ -223,27 +228,34 @@ function SearchForm({addToLineup, budget, setBudget, lineup, setLineup}) {
                         autoComplete="off"
                     />
                     <ul>
-                        {searchResults.map(player => (
-                            <div key={player.id}>
-                            <li key={player.id}>{player.name} - {player.position} - {player.price}</li>
-                            <button onClick={(event) => addToLineup(player,event)}>Add to Lineup</button>
-                            </div>
-                            ))}
+                        {searchResults.map((player) => (
+                            <li key={player.id} className="player-item-container">
+                                {player.name} - {player.position} - {player.price}
+                                <button className="add-to-lineup-button" onClick={(event) => addToLineup(player, event)}>
+                                    Add to Lineup
+                                </button>
+                            </li>
+                        ))}
+
 
                     </ul>
 
-                    <ReactPaginate
-                        pageCount={totalPages}
-                        pageRangeDisplayed={5}
-                        marginPagesDisplayed={2}
-                        previousLabel={'<'}
-                        nextLabel={'>'}
-                        onPageChange={handlePageClick}
-                        forcePage={currentPage}
+                    <Pagination
+                        count={totalPages}
+                        page={currentPage + 1}
+                        onChange={(event, value) => {
+                            setCurrentPage(value - 1)
+                            fetchSearchResults(value - 1)
+                        }}
+                        color="primary"
+                        size="large"
                     />
+
+
                 </div>
             </div>
         </div>
     )
 }
+
 export default SearchForm;

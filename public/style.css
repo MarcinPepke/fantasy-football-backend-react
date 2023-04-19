@@ -540,3 +540,25 @@ input[type="search"]{
 .footerLogin{
     text-align: center;
 }
+.player-item-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f1f1f1;
+    padding: 5px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    width: 100%;
+}
+.fixtures-display {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.add-to-lineup-button {
+    width: 100%; /* Adjust this value according to your desired width */
+    display: inline-block;
+    text-align: center;
+}
