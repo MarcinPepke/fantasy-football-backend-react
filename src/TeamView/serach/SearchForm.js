@@ -3,13 +3,17 @@ import { useState, useEffect} from "react";
 import ReactPaginate from "react-paginate";
 import {searchEngine} from "../../api";
 
-function SearchForm({addToLineup}) {
+function SearchForm({addToLineup, budget, setBudget, lineup, setLineup}) {
     const [name, setName] = useState('');
     const [position, setPosition] = useState('');
     const [price, setPrice] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [totalPages, setTotalPages] = useState(1);
     const [currentPage, setCurrentPage] = useState(0);
+
+
+
+
 
     function handleNameChange(event) {
         setName(event.target.value);
@@ -222,7 +226,7 @@ function SearchForm({addToLineup}) {
                         {searchResults.map(player => (
                             <div key={player.id}>
                             <li key={player.id}>{player.name} - {player.position} - {player.price}</li>
-                            <button onClick={(event) => handleAddToLineup(player,event)}>Add to Lineup</button>
+                            <button onClick={(event) => addToLineup(player,event)}>Add to Lineup</button>
                             </div>
                             ))}
 

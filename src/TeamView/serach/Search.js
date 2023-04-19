@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import SearchForm from "./SearchForm";
 import Tittle from "../Tittle";
 
-function Search({addToLineup}) {
+function Search({addToLineup, lineup, budget, setBudget, setLineup}) {
     const [clubs, setClubs] = useState([]);
     const [filter, setFilter] = useState();
 
@@ -19,7 +19,11 @@ function Search({addToLineup}) {
         <div className="heTWLW">
             <Tittle />
             <form className="emRHbR">
-                <SearchForm addToLineup={addToLineup} />
+                <SearchForm  addToLineup={addToLineup}
+                             setLineup={setLineup}
+                             lineup={lineup}
+                             budget={budget}
+                             setBudget={setBudget} />
             </form>
 
         </div>

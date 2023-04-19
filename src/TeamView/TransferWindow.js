@@ -1,12 +1,13 @@
 import TeamInfo from "./TeamInfo";
 import PitchView from "./PitchView";
 import PlayerCard from "../PlayerCard";
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {getAllPlayers, addPlayer, removePlayer, getAllPremierLeaguePlayers} from '../playerService';
 import Search from "./serach/Search";
 import CreateTeam from "../component/CreateTeam";
 import LoginPage from "../Login/LoginPage";
 import {createTeam, fetchUserTeam, getBudget, login} from "../api";
+import Player from "./Player";
 
 function Navbar() {
     return null;
@@ -19,10 +20,10 @@ const TransferWindow = ({userTeam, onAddPlayer, onRemovePlayer}) => {
     const [isToken, setIsToken] = useState(false);
 
     const [lineup, setLineup] = useState({
-        goalkeepers: [],
-        defenders: [],
-        midfielders: [],
-        forwards: [],
+        Goalkeeper: [],
+        Defender: [],
+        Midfielder: [],
+        Attacker: [],
     });
 
     const [budget, setBudget] = useState(0)
@@ -39,10 +40,10 @@ const TransferWindow = ({userTeam, onAddPlayer, onRemovePlayer}) => {
                 setTeam(teamData);
 
                 const lineupData = {
-                    goalkeepers: Array.isArray(teamData) ? teamData.filter(player => player.position === 'Goalkeeper') : [],
-                    defenders: Array.isArray(teamData) ? teamData.filter(player => player.position === 'Defender') : [],
-                    midfielders: Array.isArray(teamData) ? teamData.filter(player => player.position === 'Midfielder') : [],
-                    forwards: Array.isArray(teamData) ? teamData.filter(player => player.position === 'Attacker') : [],
+                    Goalkeeper: Array.isArray(teamData) ? teamData.filter(player => player.position === 'Goalkeeper') : [],
+                    Defender: Array.isArray(teamData) ? teamData.filter(player => player.position === 'Defender') : [],
+                    Midfielder: Array.isArray(teamData) ? teamData.filter(player => player.position === 'Midfielder') : [],
+                    Attacker: Array.isArray(teamData) ? teamData.filter(player => player.position === 'Attacker') : [],
                 };
                 setLineup(lineupData);
             } else
@@ -76,26 +77,29 @@ const TransferWindow = ({userTeam, onAddPlayer, onRemovePlayer}) => {
         }
     }
 
-    function addToLineup(player,event) {
+    const addToLineup = useCallback((player, event) => {
         event.preventDefault();
-        console.log(player)
         if (budget - player.price < 0) {
             alert("Not enough budget");
             return;
         }
 
-        if (lineup[player.position].length >= getMaximumPlayersForPosition(player.position)) {
+
+        if (lineup["Defender"].length >= getMaximumPlayersForPosition(player.position)) {
+            console.log(lineup[player.position].length)
             alert("Maximum players for this position reached");
             return;
         }
 
-        setLineup({
-            ...lineup,
-            [player.position]: [...lineup[player.position], player],
-        });
+        setLineup(prevLineup => ({
+            ...prevLineup,
+            [player.position]: [...prevLineup[player.position], player],
+        }));
+
+        console.log(lineup)
 
         setBudget(budget - player.price);
-    }
+    }, [lineup, setLineup]);
 
     function removeFromLineup(player) {
         setLineup({
@@ -105,6 +109,7 @@ const TransferWindow = ({userTeam, onAddPlayer, onRemovePlayer}) => {
 
         setBudget(budget + player.price);
     }
+
     return (
         <div className="sQB1U">
             <Navbar/>
@@ -132,22 +137,27 @@ const TransferWindow = ({userTeam, onAddPlayer, onRemovePlayer}) => {
 
                                                 <div className="dEnEMP">
                                                     <div className="iAuEaL-gPAVqU">
-                                                        {lineup.goalkeepers.map((player => (
+                                                        {lineup.Goalkeeper.map((player => (
                                                             <div className="gAzdNx">
                                                                 {player.name}
                                                             </div>
                                                         )))}
 
-                                                        <div className="gAzdNx">
+                                                       {/* <div className="gAzdNx">
 
                                                         </div>
                                                         <div className="gAzdNx">
 
                                                         </div>
-                                                        <div className="gAzdNx"></div>
+                                                        <div className="gAzdNx"></div>*/}
                                                     </div>
                                                     <div className="iAuEaL-gPAVqU">
-                                                        <div className="gAzdNx">
+                                                        {lineup.Defender.map((player => (
+                                                            <div className="gAzdNx">
+                                                                <Player photo={player.photo} price={player.price} name={player.name} />
+                                                            </div>
+                                                        )))}
+                                                       {/* <div className="gAzdNx">
 
                                                         </div>
                                                         <div className="gAzdNx">
@@ -158,38 +168,39 @@ const TransferWindow = ({userTeam, onAddPlayer, onRemovePlayer}) => {
                                                         </div>
                                                         <div className="gAzdNx">
 
-                                                        </div>
-                                                        <div className="gAzdNx">
-
-                                                        </div>
+                                                        </div>*/}
                                                     </div>
                                                     <div className="iAuEaL-gPAVqU">
-                                                        <div className="gAzdNx">
+                                                        {lineup.Midfielder.map((player => (
+                                                            <div className="gAzdNx">
+                                                                {player.name}
+                                                            </div>
+                                                        )))}
+                                                        {/*<div className="gAzdNx">*/}
 
-                                                        </div>
-                                                        <div className="gAzdNx">
+                                                        {/*</div>*/}
+                                                        {/*<div className="gAzdNx">*/}
 
-                                                        </div>
-                                                        <div className="gAzdNx">
+                                                        {/*</div>*/}
+                                                        {/*<div className="gAzdNx">*/}
 
-                                                        </div>
-                                                        <div className="gAzdNx">
+                                                        {/*</div>*/}
+                                                        {/*<div className="gAzdNx">*/}
 
-                                                        </div>
-                                                        <div className="gAzdNx">
-
-                                                        </div>
+                                                        {/*</div>*/}
                                                     </div>
                                                     <div className="iAuEaL-gPAVqU">
-                                                        <div className="gAzdNx">
+                                                        {lineup.Attacker.map((player => (
+                                                            <div className="gAzdNx">
+                                                               <Player photo={player.photo} price={player.price} name={player.name} />
+                                                            </div>
+                                                        )))}
+                                                        {/*<div className="gAzdNx">*/}
 
-                                                        </div>
-                                                        <div className="gAzdNx">
+                                                        {/*</div>*/}
+                                                        {/*<div className="gAzdNx">*/}
 
-                                                        </div>
-                                                        <div className="gAzdNx">
-
-                                                        </div>
+                                                        {/*</div>*/}
                                                     </div>
                                                 </div>
                                             </div>
@@ -201,7 +212,7 @@ const TransferWindow = ({userTeam, onAddPlayer, onRemovePlayer}) => {
                         </div>
                         <div className="bVraMK">
 
-                            <Search addToLineup={addToLineup}/>
+                            <Search addToLineup={addToLineup} lineup={lineup} budget={budget} setBudget={setBudget} setLineup={setLineup}/>
 
                         </div>
                     </div>
