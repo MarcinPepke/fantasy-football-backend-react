@@ -70,5 +70,26 @@ export const getFixture = async() => {
     });
     return response.data;
 };
+export const updateTeam = async(lineup, budget) => {
+    const response = await apiClient.put('/api/fantasy/team/save',{lineup, budget}, {
+        headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem("accessToken")
+        }
+    });
+    return response.data;
+};
+export const fetchPlayerStatisticsAndCalculatePointsApi = async(fixtureId) => {
+    const response = await apiClient.get('/api/player/stats', {
+        headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem("accessToken")
+        },
+        params:{
+            'fixtureId':fixtureId
+        }
+    });
+    return response.data;
+};
+
+
 
 

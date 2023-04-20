@@ -342,10 +342,14 @@ ul li, ol li{
     width: 100%;
     padding: 0px;
     border: 0px;
+    border: none;
     background-color: transparent;
     font-family: PremierSans-Bold, Arial, "Helvetica Neue", Helvetica, sans-seriff;
     line-height: 1;
     cursor: pointer;
+}
+.fBGUqJ:hover{
+    color:darkred
 }
 button{
     -webkit-appearance: button;
@@ -407,6 +411,9 @@ p{
     padding: 4px;
     border-radius: 50%;
     background-color: rgb(55, 0, 60);
+}
+.jvXZab:hover{
+    color: darkred;
 }
 .dnLdnR{
     border: 0px;
@@ -590,4 +597,23 @@ input[type="search"]{
     align-items: center;
     width: 100%;
 }
+.flTOZR {
+    width: 100px;
+    height: 100px;
+}
+.saveButton{
+    width: 200px;
+    background-color: #6ab04c; /* set your desired color value */
+    color: white; /* set text color to white or another contrasting color */ /* remove button border */
+    padding: 10px 20px; /* add padding to make the button more visible */
+    border-radius: 4px; /* add border radius to soften button corners */
+    font-size: 16px; /* set font size */
 
+    text-align: center; /
+}
+.saveContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}

@@ -15,6 +15,14 @@ function SearchForm({addToLineup, budget, setBudget, lineup, setLineup}) {
     const [totalPages, setTotalPages] = useState(1);
     const [currentPage, setCurrentPage] = useState(0);
 
+    let [domain, setDomain] = useState();
+    let [isTransferPage, setIsTransferPage] = useState();
+
+    useEffect(() => {
+        setDomain(window.location.href);
+        if (domain === "http://localhost:3000/transfers") setIsTransferPage(true);
+    }, [domain, isTransferPage]);
+
     const searchEngineProps = {
         addToLineup: addToLineup,
     };
@@ -86,8 +94,8 @@ function SearchForm({addToLineup, budget, setBudget, lineup, setLineup}) {
                             <option value="Midfielder" aria-selected="false" class="kdSPtv">
                                 Midfielders
                             </option>
-                            <option value="Forward" aria-selected="false" class="kdSPtv">
-                                Forwards
+                            <option value="Attacker" aria-selected="false" class="kdSPtv">
+                                Attacker
                             </option>
                         </optgroup>
                         <optgroup label="By Team">
@@ -231,9 +239,12 @@ function SearchForm({addToLineup, budget, setBudget, lineup, setLineup}) {
                         {searchResults.map((player) => (
                             <li key={player.id} className="player-item-container">
                                 {player.name} - {player.position} - {player.price}
-                                <button className="add-to-lineup-button" onClick={(event) => addToLineup(player, event)}>
-                                    Add to Lineup
-                                </button>
+                                {isTransferPage ?
+                                    <button className="add-to-lineup-button"
+                                            onClick={(event) => addToLineup(player, event)}>
+                                        Add to Lineup
+                                    </button>
+                                 : null}
                             </li>
                         ))}
 
