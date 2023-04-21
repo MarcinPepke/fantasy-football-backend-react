@@ -22,6 +22,18 @@ export const login = async (username, password) => {
     }
     };
 
+export const register = async (username, password) => {
+    try {
+        const response = await apiClient.post('/api/user', {
+            username:username,
+            password:password,
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error during login:', error);
+        throw error;
+    }
+};
    export const fetchUserTeam = async() => {
         const response = await axios.get(`${API_BASE_URL}/api/fantasy/user/team`, {
             headers: {
@@ -85,6 +97,30 @@ export const fetchPlayerStatisticsAndCalculatePointsApi = async(fixtureId) => {
         },
         params:{
             'fixtureId':fixtureId
+        }
+    });
+    return response.data;
+};
+export const fetchingOverallRankingData = async() => {
+    const response = await apiClient.get('/api/fantasy/ranking-total', {
+        headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem("accessToken")
+        }
+    });
+    return response.data;
+};
+export const fetchingCurrentGameweekRankingData = async() => {
+    const response = await apiClient.get('/api/fantasy/ranking-current', {
+        headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem("accessToken")
+        }
+    });
+    return response.data;
+};
+export const isTeam = async() => {
+    const response = await apiClient.get('/api/fantasy/isTeam', {
+        headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem("accessToken")
         }
     });
     return response.data;

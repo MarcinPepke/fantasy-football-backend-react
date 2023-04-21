@@ -1,35 +1,22 @@
 // src/components/LoginPage.js
-import React, {useState} from 'react';
-import {isTeam, login} from "../api";
+import React, { useState } from 'react';
+import {login, register} from "../api";
 import {useNavigate} from "react-router-dom";
 
-const LoginPage = () => {
+const RegisterPage = () => {
 
     const navigate = useNavigate();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
 
-    async function onLogin(username, password) {
-        try {
-            const {accessToken, refreshToken} = await login(username, password);
-            localStorage.setItem('accessToken', accessToken);
-        } catch (error) {
-            alert('Login failed. Please check your credentials and try again.');
-        }
-    }
 
-    async function hasTeam() {
-        return await isTeam();
-    }
 
-    const handleSubmit = async (e) => {
+
+    const handleSubmit = (e) => {
         e.preventDefault();
         if (username.trim() && password.trim()) {
-            await onLogin(username.trim(), password.trim())
-            let hasTeamUser = await hasTeam();
-            console.log(hasTeamUser)
-            hasTeamUser ? navigate("/transfers") : navigate("/create-team");
+            register(username.trim(), password.trim()).then(() => navigate("/login"));
 
         }
     };
@@ -52,10 +39,10 @@ const LoginPage = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
-                <button type="submit">Login</button>
+                <button type="submit">Sign up</button>
             </form>
         </div>
     );
 };
 
-export default LoginPage;
+export default RegisterPage;

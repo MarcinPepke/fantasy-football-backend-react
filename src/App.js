@@ -8,6 +8,9 @@ import AuthWrapper from "./component/AuthWrapper";
 import {login} from "./api";
 import Fixture from "./Fixture/Fixture";
 import MyTeamComponent from "./MyTeam/MyTeamComponent";
+import Ranking from "./component/Ranking";
+import RegisterPage from "./component/Register";
+import CreateTeam from "./component/CreateTeam";
 const App = () => {
 
 
@@ -19,6 +22,9 @@ const App = () => {
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/fixture" element={<Fixture  />} />
                     <Route path="/my-team" element={<TransferWindow  />} />
+                    <Route path="/ranking" element={<Ranking  />} />
+                    <Route path="/register" element={<RegisterPage  />} />
+                    <Route path="/create-team" element={<CreateTeam  />} />
                     <Route
                         path="/transfers"
                         element={

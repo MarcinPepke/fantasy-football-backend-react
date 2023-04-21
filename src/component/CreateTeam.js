@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
+import {createTeam} from "../api";
+import {useNavigate} from "react-router-dom";
 
-const CreateTeam = ({ onCreateTeam }) => {
+const CreateTeam = () => {
+    const navigate = useNavigate();
     const [teamName, setTeamName] = useState('');
 
     const handleSubmit = (e) => {
         e.preventDefault();
         if (teamName.trim()) {
-            onCreateTeam(teamName.trim());
+            createTeam(teamName.trim()).then(r => navigate("/transfers"));
         }
     };
 
@@ -19,7 +22,10 @@ const CreateTeam = ({ onCreateTeam }) => {
                     type="text"
                     id="team-name"
                     value={teamName}
-                    onChange={(e) => setTeamName(e.target.value)}
+                    onChange={(e) => {
+                        setTeamName(e.target.value)
+                        console.log(teamName)
+                    }}
                 />
                 <button type="submit">Create Team</button>
             </form>

@@ -47,22 +47,22 @@ function Fixture() {
 
     return (
         <div>
-            <h2>Team Fixtures</h2>
+
             {fixtures ? (
-                <div className="fixture-container">
-                    <div className="card fixture-card">
+                <div className="card fixture-card">
+                    <center>
+                        <h2>Team fixture</h2>
+                    </center>
+                    {fixtures.map((fixture, index) => (
+                        <div className="card-body">
+                            <h5 className="card-title">{fixture.teams.home.name} vs {fixture.teams.away.name}</h5>
+                            <h5 className="card-title">{fixture.goals.home} vs {fixture.goals.away}</h5>
+                            <p className="card-text">{new Date(fixture.fixture.timestamp * 1000).toLocaleDateString()} {" "}
+                                {new Date(fixture.fixture.timestamp * 1000).toLocaleTimeString()}
+                            </p>
+                        </div>
+                    ))}
 
-                        {fixtures.map((fixture, index) => (
-                            <div className="card-body">
-                                <h5 className="card-title">{fixture.teams.home.name} vs {fixture.teams.away.name}</h5>
-                                <h5 className="card-title">{fixture.goals.home} vs {fixture.goals.away}</h5>
-                                <p className="card-text">{new Date(fixture.fixture.timestamp * 1000).toLocaleDateString()} {" "}
-                                    {new Date(fixture.fixture.timestamp * 1000).toLocaleTimeString()}
-                                </p>
-                            </div>
-                        ))}
-
-                    </div>
                 </div>
             ) : (
                 <p>Loading fixtures...</p>

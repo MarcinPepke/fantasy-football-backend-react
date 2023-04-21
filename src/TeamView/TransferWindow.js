@@ -12,14 +12,14 @@ import player from "./Player";
 import Match from "../component/Match";
 import Fixture from "../Fixture/Fixture";
 import {Button} from "@mui/material";
-import { useNavigate } from 'react-router-dom'
-import { Navbar, Nav } from 'react-bootstrap';
+import {useNavigate} from 'react-router-dom'
+import {Navbar, Nav} from 'react-bootstrap';
 
 function NavbarComponent() {
     return (
         <Navbar bg="dark" variant="dark" expand="lg" className={"d-flex justify-content-center"}>
             <Navbar.Brand href="/">Fantasy Football</Navbar.Brand>
-            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Toggle aria-controls="basic-navbar-nav"/>
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="mr-auto">
                     <Nav.Link href="/transfers">Transfers</Nav.Link>
@@ -50,9 +50,7 @@ const TransferWindow = ({userTeam, onAddPlayer, onRemovePlayer}) => {
     const [budget, setBudget] = useState(0)
 
 
-    const handleCreateTeam = (name) => {
-        createTeam(name).then(r => alert("stworzono druzyne"));
-    };
+
     const [fixtures, setFixtures] = useState(null);
 
     useEffect(() => {
@@ -66,12 +64,9 @@ const TransferWindow = ({userTeam, onAddPlayer, onRemovePlayer}) => {
     }, []);
 
 
-
-
     useEffect(() => {
         fetchUserTeam().then((teamData) => {
-            if (teamData) {
-                setHasTeam(true);
+            if (teamData != null) {
                 setTeam(teamData);
 
 
@@ -82,20 +77,19 @@ const TransferWindow = ({userTeam, onAddPlayer, onRemovePlayer}) => {
                     Attacker: Array.isArray(teamData) ? teamData.filter(player => player.position === 'Attacker') : [],
                 };
                 setLineup(lineupData);
-            } else
-                setHasTeam(false);
+            }
         })
-    })
+    }, []);
     useEffect(() => {
-        getBudget()
-            .then(fetchedBudget => {
-                console.log(budget)
-                setBudget(fetchedBudget);
-            })
-            .catch(error => {
-                if (error.response.status === 403)
-                    navigate("/login");
-            });
+            getBudget()
+                .then(fetchedBudget => {
+                    console.log(budget)
+                    setBudget(fetchedBudget);
+                })
+                .catch(error => {
+                    if (error.response.status === 403)
+                        navigate("/login");
+                });
     }, []);
 
 
@@ -192,9 +186,6 @@ const TransferWindow = ({userTeam, onAddPlayer, onRemovePlayer}) => {
             </div>
 
             <NavbarComponent/>
-            {!hasTeam && isToken ? (
-                <CreateTeam onCreateTeam={handleCreateTeam}/>
-            ) : (
                 <div className="kciYco">
                     <div className="kzyLIB">
                         <div className="wXYnc">
@@ -220,7 +211,7 @@ const TransferWindow = ({userTeam, onAddPlayer, onRemovePlayer}) => {
                                                         {lineup.Goalkeeper.map((player => (
                                                             <div key={player.id} className="gAzdNx">
                                                                 <Player fixtures={fixtures} club={player.club.name}
-                                                                    key={player.id} photo={player.photo}
+                                                                        key={player.id} photo={player.photo}
                                                                         price={player.price} name={player.name}
                                                                         removeFromLineup={removeFromLineup}
                                                                         playerId={player.id}
@@ -236,7 +227,7 @@ const TransferWindow = ({userTeam, onAddPlayer, onRemovePlayer}) => {
                                                                 <Player club={player.club.name}
                                                                         points={player.currentGameWeekPoints}
                                                                         fixtures={fixtures}
-                                                                    key={player.id} photo={player.photo}
+                                                                        key={player.id} photo={player.photo}
                                                                         price={player.price} name={player.name}
                                                                         removeFromLineup={removeFromLineup}
                                                                         playerId={player.id}
@@ -249,7 +240,7 @@ const TransferWindow = ({userTeam, onAddPlayer, onRemovePlayer}) => {
                                                         {lineup.Midfielder.map((player => (
                                                             <div key={player.id} className="gAzdNx">
                                                                 <Player fixtures={fixtures} club={player.club.name}
-                                                                    key={player.id} photo={player.photo}
+                                                                        key={player.id} photo={player.photo}
                                                                         price={player.price} name={player.name}
                                                                         removeFromLineup={removeFromLineup}
                                                                         points={player.currentGameWeekPoints}
@@ -263,7 +254,7 @@ const TransferWindow = ({userTeam, onAddPlayer, onRemovePlayer}) => {
                                                         {lineup.Attacker.map((player => (
                                                             <div key={player.id} className="gAzdNx">
                                                                 <Player fixtures={fixtures} club={player.club.name}
-                                                                    key={player.id} photo={player.photo}
+                                                                        key={player.id} photo={player.photo}
                                                                         price={player.price} name={player.name}
                                                                         points={player.currentGameWeekPoints}
                                                                         removeFromLineup={removeFromLineup}
@@ -295,10 +286,14 @@ const TransferWindow = ({userTeam, onAddPlayer, onRemovePlayer}) => {
                         </div>
                     </div>
                 </div>
-            )}
+            <br/>
             <div className="fixtures-container">
-                <Fixture/>
+
+                    <Fixture/>
+
+
             </div>
+
         </div>
     );
 };

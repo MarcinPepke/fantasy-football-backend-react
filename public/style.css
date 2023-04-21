@@ -507,11 +507,13 @@ optgroup{
     box-shadow: rgb(0 0 0 / 6%) 0px 1px 8px 0px;
 }
 .jPIsxM{
+    display: block;
     width: 100%;
-    border: 0px;
+    padding: 8px 12px;
+    margin: 8px 0;
+    font-size: 16px;
+    border: 1px solid #ccc;
     border-radius: 4px;
-    background-color: white;
-    font-size: inherit;
 }
 input{
     line-height: normal;
