@@ -1,6 +1,18 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 
-function GameweekInfo(){
+function GameweekInfo({gameweek}){
+
+
+    const[deadline,setDeadline] = useState(new Date());
+
+    useEffect(() => {
+        var dayOfWeek = 5;//friday
+        var date = new Date();
+        date.setDate(date.getDate() + (dayOfWeek + 7 - date.getDay()) % 7);
+        setDeadline(date);
+        console.log(deadline)
+    },[])
+
     return(
         <div className="c0zWYq">
             <div className="dbiWsa">
@@ -9,13 +21,8 @@ function GameweekInfo(){
                 </div>
             </div>
             <div className="fuooDk">
-                <h4>Gameweek ? deadline: </h4>
-                <time
-                    datetime="2022-12-26T12:00:00+01:00"
-
-                >
-                    Mon 26 Dec 12:00
-                </time>
+                <h4>Gameweek {gameweek} deadline: </h4>
+                <h4>{deadline.toLocaleDateString()}</h4>
             </div>
         </div>
     )

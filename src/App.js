@@ -11,6 +11,7 @@ import MyTeamComponent from "./MyTeam/MyTeamComponent";
 import Ranking from "./component/Ranking";
 import RegisterPage from "./component/Register";
 import CreateTeam from "./component/CreateTeam";
+import FixtureComponent from "./component/FixtureComponent";
 const App = () => {
 
 
@@ -19,12 +20,13 @@ const App = () => {
         <div className="App">
             <Router>
                 <Routes>
-                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/" element={<LoginPage />} />
                     <Route path="/fixture" element={<Fixture  />} />
                     <Route path="/my-team" element={<TransferWindow  />} />
                     <Route path="/ranking" element={<Ranking  />} />
                     <Route path="/register" element={<RegisterPage  />} />
                     <Route path="/create-team" element={<CreateTeam  />} />
+                    <Route path="/fixtures" element={<FixtureComponent  />} />
                     <Route
                         path="/transfers"
                         element={

@@ -6,7 +6,7 @@ import {
     getFixture
 } from "../api";
 
-function Fixture() {
+function Fixture({setGameweek, gameweek, isSetGameweek}) {
 
 
     const [isLoading, setIsLoading] = useState(true);
@@ -14,22 +14,27 @@ function Fixture() {
     const [fixtures, setFixtures] = useState(null);
 
     useEffect(() => {
-        setIsLoading(true);
-        getFixture()
-            .then(fixture => {
-                setFixtures(fixture);
-            })
-            .catch(error => {
-                console.error('Error fetching budget data:', error);
-            });
-        setIsLoading(false);
+        if (isSetGameweek) {
+            setIsLoading(true);
+            getFixture(gameweek)
+                .then(fixture => {
+                    setFixtures(fixture);
+                })
+                .catch(error => {
+                    console.error('Error fetching budget data:', error);
+                });
+            setIsLoading(false);
+        }
     }, []);
 
 
     useEffect(() => {
         if (!isLoading) {
-            const liveMatches = fixtures.filter(match => match.fixture.status.short === 'LIVE');
 
+            const liveMatches = fixtures.filter(match => match.fixture.status.short === '1H' || match.fixture.status.short === '2H');
+            liveMatches.forEach(match => {
+                console.log(match)
+            })
             if (liveMatches.length > 0) {
                 const interval = setInterval(() => {
                     liveMatches.forEach(match => {
@@ -42,7 +47,7 @@ function Fixture() {
                 return () => clearInterval(interval);
             }
         }
-    }, [fixtures]);
+    }, []);
 
 
     return (

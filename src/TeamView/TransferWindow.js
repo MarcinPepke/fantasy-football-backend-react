@@ -6,38 +6,21 @@ import {getAllPlayers, addPlayer, removePlayer, getAllPremierLeaguePlayers} from
 import Search from "./serach/Search";
 import CreateTeam from "../component/CreateTeam";
 import LoginPage from "../Login/LoginPage";
-import {createTeam, fetchUserTeam, getBudget, getFixture, login, updateTeam} from "../api";
+import {createTeam, fetchUserTeam, getBudget, getCurentGameweek, getFixture, isTeam, login, updateTeam} from "../api";
 import Player from "./Player";
 import player from "./Player";
 import Match from "../component/Match";
 import Fixture from "../Fixture/Fixture";
 import {Button} from "@mui/material";
 import {useNavigate} from 'react-router-dom'
-import {Navbar, Nav} from 'react-bootstrap';
 
-function NavbarComponent() {
-    return (
-        <Navbar bg="dark" variant="dark" expand="lg" className={"d-flex justify-content-center"}>
-            <Navbar.Brand href="/">Fantasy Football</Navbar.Brand>
-            <Navbar.Toggle aria-controls="basic-navbar-nav"/>
-            <Navbar.Collapse id="basic-navbar-nav">
-                <Nav className="mr-auto">
-                    <Nav.Link href="/transfers">Transfers</Nav.Link>
-                    <Nav.Link href="/my-team">My Team</Nav.Link>
-                    <Nav.Link href="/ranking">Ranking</Nav.Link>
-                    <Nav.Link href="/fixtures">Fixtures</Nav.Link>
-                </Nav>
-            </Navbar.Collapse>
-        </Navbar>
-    )
-}
+import NavbarComponent from "../component/NavbarComponent";
+
 
 const TransferWindow = ({userTeam, onAddPlayer, onRemovePlayer}) => {
     const navigate = useNavigate();
     const [team, setTeam] = useState(null);
-    const [hasTeam, setHasTeam] = useState(false);
-    const [teamName, setTeamName] = useState('');
-    const [isToken, setIsToken] = useState(false);
+    const [gameweek, setGamewek] = useState();
 
 
     const [lineup, setLineup] = useState({
@@ -48,20 +31,23 @@ const TransferWindow = ({userTeam, onAddPlayer, onRemovePlayer}) => {
     });
 
     const [budget, setBudget] = useState(0)
-
+    const [isSetGameweek, setIsSetGameweek] = useState(false);
 
 
     const [fixtures, setFixtures] = useState(null);
 
     useEffect(() => {
-        getFixture()
-            .then(fixture => {
-                setFixtures(fixture);
+        setIsSetGameweek(false)
+        getCurentGameweek().then((result) => {
+            result.map((round) => {
+
+                setGamewek(round.round.replace("Regular Season - ", "").toString())
+                setIsSetGameweek(true);
+                console.log(gameweek)
+
             })
-            .catch(error => {
-                console.error('Error fetching budget data:', error);
-            });
-    }, []);
+        })
+    },[]);
 
 
     useEffect(() => {
@@ -81,15 +67,15 @@ const TransferWindow = ({userTeam, onAddPlayer, onRemovePlayer}) => {
         })
     }, []);
     useEffect(() => {
-            getBudget()
-                .then(fetchedBudget => {
-                    console.log(budget)
-                    setBudget(fetchedBudget);
-                })
-                .catch(error => {
-                    if (error.response.status === 403)
-                        navigate("/login");
-                });
+        getBudget()
+            .then(fetchedBudget => {
+                console.log(budget)
+                setBudget(fetchedBudget);
+            })
+            .catch(error => {
+                if (error.response.status === 403)
+                    navigate("/login");
+            });
     }, []);
 
 
@@ -173,9 +159,12 @@ const TransferWindow = ({userTeam, onAddPlayer, onRemovePlayer}) => {
     }
 
     function makeTransfers() {
-        updateTeam(lineup, budget).then((team) => {
-            console.log(team);
-        })
+        if (lineup.Attacker.length + lineup.Defender.length + lineup.Midfielder.length + lineup.Goalkeeper.length === 15) {
+            updateTeam(lineup, budget).then((team) => {
+                console.log(team);
+            })
+        } else
+            alert("There must be 15 players in the squad to make the transfer");
     }
 
     return (
@@ -186,110 +175,111 @@ const TransferWindow = ({userTeam, onAddPlayer, onRemovePlayer}) => {
             </div>
 
             <NavbarComponent/>
-                <div className="kciYco">
-                    <div className="kzyLIB">
-                        <div className="wXYnc">
-                            <div className="cGWMgT">
-                                <h2 className="btMgbK"> Transfers </h2>
-                            </div>
-                            <div>
+            <div className="kciYco">
+                <div className="kzyLIB">
+                    <div className="wXYnc">
+                        <div className="cGWMgT">
+                            <h2 className="btMgbK"> Transfers </h2>
+                        </div>
+                        <div>
 
 
-                                <div className="gArsoz">
-                                    <TeamInfo
-                                        lineupSize={lineup.Attacker.length + lineup.Defender.length + lineup.Midfielder.length + lineup.Goalkeeper.length}
-                                        budget={budget}
-                                    />
-                                    <div role="status"></div>
+                            <div className="gArsoz">
+                                <TeamInfo
+                                    gameweek={gameweek}
+                                    lineupSize={lineup.Attacker.length + lineup.Defender.length + lineup.Midfielder.length + lineup.Goalkeeper.length}
+                                    budget={budget}
+                                />
+                                <div role="status"></div>
+                                <div>
+                                    <PitchView/>
                                     <div>
-                                        <PitchView/>
-                                        <div>
-                                            <div className="gg0nwe">
+                                        <div className="gg0nwe">
 
-                                                <div className="dEnEMP">
-                                                    <div className="iAuEaL-gPAVqU">
-                                                        {lineup.Goalkeeper.map((player => (
-                                                            <div key={player.id} className="gAzdNx">
-                                                                <Player fixtures={fixtures} club={player.club.name}
-                                                                        key={player.id} photo={player.photo}
-                                                                        price={player.price} name={player.name}
-                                                                        removeFromLineup={removeFromLineup}
-                                                                        playerId={player.id}
-                                                                        points={player.currentGameWeekPoints}
-                                                                        playerPosition={player.position}/>
-                                                            </div>
-                                                        )))}
+                                            <div className="dEnEMP">
+                                                <div className="iAuEaL-gPAVqU">
+                                                    {lineup.Goalkeeper.map((player => (
+                                                        <div key={player.id} className="gAzdNx">
+                                                            <Player fixtures={fixtures} club={player.club.name}
+                                                                    key={player.id} photo={player.photo}
+                                                                    price={player.price} name={player.name}
+                                                                    removeFromLineup={removeFromLineup}
+                                                                    playerId={player.id}
+                                                                    points={player.currentGameWeekPoints}
+                                                                    playerPosition={player.position}/>
+                                                        </div>
+                                                    )))}
 
-                                                    </div>
-                                                    <div className="iAuEaL-gPAVqU">
-                                                        {lineup.Defender.map((player => (
-                                                            <div key={player.id} className="gAzdNx">
-                                                                <Player club={player.club.name}
-                                                                        points={player.currentGameWeekPoints}
-                                                                        fixtures={fixtures}
-                                                                        key={player.id} photo={player.photo}
-                                                                        price={player.price} name={player.name}
-                                                                        removeFromLineup={removeFromLineup}
-                                                                        playerId={player.id}
-                                                                        playerPosition={player.position}/>
-                                                            </div>
-                                                        )))}
-
-                                                    </div>
-                                                    <div className="iAuEaL-gPAVqU">
-                                                        {lineup.Midfielder.map((player => (
-                                                            <div key={player.id} className="gAzdNx">
-                                                                <Player fixtures={fixtures} club={player.club.name}
-                                                                        key={player.id} photo={player.photo}
-                                                                        price={player.price} name={player.name}
-                                                                        removeFromLineup={removeFromLineup}
-                                                                        points={player.currentGameWeekPoints}
-                                                                        playerId={player.id}
-                                                                        playerPosition={player.position}/>
-                                                            </div>
-                                                        )))}
-
-                                                    </div>
-                                                    <div className="iAuEaL-gPAVqU">
-                                                        {lineup.Attacker.map((player => (
-                                                            <div key={player.id} className="gAzdNx">
-                                                                <Player fixtures={fixtures} club={player.club.name}
-                                                                        key={player.id} photo={player.photo}
-                                                                        price={player.price} name={player.name}
-                                                                        points={player.currentGameWeekPoints}
-                                                                        removeFromLineup={removeFromLineup}
-                                                                        playerId={player.id}
-                                                                        playerPosition={player.position}
-                                                                        playerPrice={player.price}/>
-                                                            </div>
-                                                        )))}
-
-                                                    </div>
                                                 </div>
-                                                <div className="saveContainer">
-                                                    <Button className="saveButton" onClick={makeTransfers}>MAKE
-                                                        TRANSFERS</Button>
-                                                </div>
+                                                <div className="iAuEaL-gPAVqU">
+                                                    {lineup.Defender.map((player => (
+                                                        <div key={player.id} className="gAzdNx">
+                                                            <Player club={player.club.name}
+                                                                    points={player.currentGameWeekPoints}
+                                                                    fixtures={fixtures}
+                                                                    key={player.id} photo={player.photo}
+                                                                    price={player.price} name={player.name}
+                                                                    removeFromLineup={removeFromLineup}
+                                                                    playerId={player.id}
+                                                                    playerPosition={player.position}/>
+                                                        </div>
+                                                    )))}
 
+                                                </div>
+                                                <div className="iAuEaL-gPAVqU">
+                                                    {lineup.Midfielder.map((player => (
+                                                        <div key={player.id} className="gAzdNx">
+                                                            <Player fixtures={fixtures} club={player.club.name}
+                                                                    key={player.id} photo={player.photo}
+                                                                    price={player.price} name={player.name}
+                                                                    removeFromLineup={removeFromLineup}
+                                                                    points={player.currentGameWeekPoints}
+                                                                    playerId={player.id}
+                                                                    playerPosition={player.position}/>
+                                                        </div>
+                                                    )))}
+
+                                                </div>
+                                                <div className="iAuEaL-gPAVqU">
+                                                    {lineup.Attacker.map((player => (
+                                                        <div key={player.id} className="gAzdNx">
+                                                            <Player fixtures={fixtures} club={player.club.name}
+                                                                    key={player.id} photo={player.photo}
+                                                                    price={player.price} name={player.name}
+                                                                    points={player.currentGameWeekPoints}
+                                                                    removeFromLineup={removeFromLineup}
+                                                                    playerId={player.id}
+                                                                    playerPosition={player.position}
+                                                                    playerPrice={player.price}/>
+                                                        </div>
+                                                    )))}
+
+                                                </div>
                                             </div>
+                                            <div className="saveContainer">
+                                                <Button className="saveButton" onClick={makeTransfers}>MAKE
+                                                    TRANSFERS</Button>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
-                        </div>
-                        <div className="bVraMK">
-
-                            <Search addToLineup={addToLineup} lineup={lineup} budget={budget} setBudget={setBudget}
-                                    setLineup={setLineup}/>
 
                         </div>
                     </div>
+                    <div className="bVraMK">
+
+                        <Search addToLineup={addToLineup} lineup={lineup} budget={budget} setBudget={setBudget}
+                                setLineup={setLineup}/>
+
+                    </div>
                 </div>
+            </div>
             <br/>
             <div className="fixtures-container">
 
-                    <Fixture/>
+                <Fixture gameweek={gameweek} isSetGameweek={isSetGameweek}/>
 
 
             </div>

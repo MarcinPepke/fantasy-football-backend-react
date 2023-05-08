@@ -5,10 +5,10 @@ import MoneyInfo from "./MoneyInfo";
 import PlayerStatus from "./PlayerStatus";
 
 
-function TeamInfo({budget, lineupSize}){
+function TeamInfo({budget, lineupSize, gameweek}){
     return(
         <div className="eBaJTr">
-            <GameweekInfo />
+            <GameweekInfo gameweek={gameweek} />
             <div class="gfuSqG">
                 <PlayerStatus lineupSize={lineupSize}/>
                 <MoneyInfo budget={budget}/>
