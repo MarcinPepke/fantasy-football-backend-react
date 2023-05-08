@@ -1,4 +1,3 @@
-// src/components/LoginPage.js
 import React, { useState } from 'react';
 import {login, register} from "../api";
 import {useNavigate} from "react-router-dom";
@@ -22,8 +21,8 @@ const RegisterPage = () => {
     };
 
     return (
-        <div className="login-page">
-            <h2>Login</h2>
+        <div className="register-page">
+            <h2>Register</h2>
             <form onSubmit={handleSubmit}>
                 <label htmlFor="username">Username:</label>
                 <input

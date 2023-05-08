@@ -1,4 +1,3 @@
-// src/components/LoginPage.js
 import React, {useState} from 'react';
 import {isTeam, login} from "../api";
 import {useNavigate} from "react-router-dom";
@@ -12,7 +11,7 @@ const LoginPage = () => {
 
     async function onLogin(username, password) {
         try {
-            const {accessToken, refreshToken} = await login(username, password);
+            const {accessToken} = await login(username, password);
             localStorage.setItem('accessToken', accessToken);
         } catch (error) {
             alert('Login failed. Please check your credentials and try again.');
